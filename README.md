@@ -2,7 +2,13 @@
 
 Telegram bot for Events
 
-Project ideas
+## Project structure 
+
+- ```api``` - contains REST API for whole functionality of events-platform 
+- ```web-client``` - contains client app whick will open in browser 
+- ```telegram-bot``` - client app, telegram bot application
+
+## Project ideas
 
 1. Telegram bot for watching events, vote and so on 
 2. Web appliction for convinient configuration of events. (bot will use information from this site) 
