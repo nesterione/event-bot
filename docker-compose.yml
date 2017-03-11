@@ -10,6 +10,9 @@ services:
 
         ports: 
             - "6910:6910"
+        environment:
+            - DB_URI=<enter your db uri here>
+            - DB_NAME=<enter your database name here>
 
         logging: 
             driver: json-file
