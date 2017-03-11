@@ -1,0 +1,16 @@
+version: '2'
+
+services:
+    events-api:
+        build: api
+        image: nesterione/events-api
+        container_name: events-api
+        hostname: events-api
+        restart: always
+
+        ports: 
+            - "6910:6910"
+
+        logging: 
+            driver: json-file
+         
