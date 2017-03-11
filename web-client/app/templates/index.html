@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="jumbotron">
+    <h2>Welcome Events App</h2>
+    <p class="lead">App in progress...</p>
+</div>
+
+<div class="row marketing">
+    {% for event in events %}
+        <div>
+            <h4> <a href="#">#{{event.id}} - {{event.title}} </a></h4>
+            <p>{{event.description}}</p>
+            <p> <b>Where: </b> {{event.location}}</p>
+            <p> <b>When: </b> {{event.date}}</p>
+            <p>
+                <b>Tags:</b>
+                {% for tag in event.tags%}
+                    <a href="#">#{{tag}}</a>
+                    <hr>
+                {% endfor %}
+            </p>
+
+        </div>
+    {% endfor %}
+
+</div>
+
+{% endblock %}

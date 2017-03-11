@@ -8,4 +8,4 @@
 2. ```virtualenv -p /usr/bin/python3.5 flenv``` (only if you didn't create yet)
 3. Active virtualenv ```source ./flenv/bin/activate```
 4. Install requrements ```pip3 install -r ./req.txt```
-5. To run app make it executable ```chmod a+x app.py``` and run ```./add.py``` 
+5. To run app make it executable ```chmod a+x run.py``` and run ```./run.py``` 
