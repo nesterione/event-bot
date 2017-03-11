@@ -53,6 +53,12 @@ def put_event():
     result = service.upsert_event(request.json)
     return jsonify(result), 201
 
+@app.route('/api/v0.1/events/<string:event_id>', methods=['GET'])
+def get_event(event_id):
+    service = DataService(get_db())
+    event = service.get_event(event_id)
+    return jsonify(event)
+
 
 def get_db():
     """Opens a new database connection if there is none yet for the

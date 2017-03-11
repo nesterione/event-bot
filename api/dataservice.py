@@ -11,6 +11,9 @@ class DataService:
         result = self.db.events.find({'active': True}).sort("created", pymongo.DESCENDING)
         return result
 
+    def get_event(self, event_id):
+        return self.db.events.find_one({'_id': ObjectId(event_id)})
+
     def upsert_event(self, json):
 
 

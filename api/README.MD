@@ -89,6 +89,21 @@ Date: Sat, 11 Mar 2017 20:35:30 GMT
 ...
 ```
 
+#### get event by id
+
+```
+curl -i http://0.0.0.0:6910/api/v0.1/events/58c476c9fd8c2c7da6e9359c
+```
+```
+HTTP/1.0 200 OK
+Content-Type: application/json
+Connection: close
+Server: Werkzeug/0.12 Python/3.5.2
+Date: Sat, 11 Mar 2017 22:47:36 GMT
+
+...
+```
+
 #### insert/update
 
 ```
