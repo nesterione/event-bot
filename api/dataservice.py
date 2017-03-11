@@ -40,8 +40,18 @@ class DataService:
             event['date'] = json['date']
 
         if 'attendees' in json:
-            for tag in json['attendees']:
-                event['attendees'].append(tag)
+            unique = {}
+
+            for attendee in event['attendees']:
+                unique[attendee['id']] = attendee
+            for attendee in json['attendees']:
+                unique[attendee['id']] = attendee
+
+            merged = []
+            for k in unique.keys():
+                merged.append(unique[k])
+
+            event['attendees'] = merged
 
         if 'location' in json:
             event['location'] = json['location']
@@ -49,8 +59,9 @@ class DataService:
             event['price'] = json['price']
 
         if 'tags' in json:
-            for tag in json['tags']:
-                event['tags'].append(tag)
+            unique = set(event['tags'])
+            unique.add(*json['tags'])
+            event['tags'] = list(unique)
 
         if '_id' not in event:
             result = self.db.events.insert_one(event).inserted_id
