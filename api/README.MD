@@ -28,15 +28,13 @@ export DB_NAME=databasename
 > current version ```v0.1```
 
 
-```[GET] ${host}/api/${version}/events``` - show actual events (nev)
+```[GET] ${host}/api/${version}/events``` - show actual events
 
 ```[GET] ${host}/api/${version}/events/${id}``` - get event with id [NOT IMPLEMENTED]
 
 ```[PUT] ${host}/api/${version}/events``` - create or update event [NOT IMPLEMENTED]
 
 ```[DELETE] ${host}/api/${version}/events/${id}``` - delete event (actually only mark as not actual) [NOT IMPLEMENTED]
-
-```[GET] ${host}/api/${version}/events/${id}/attendees``` - get attendees for event with id [NOT IMPLEMENTED]
 
 ```[PUT] ${host}/api/${version}/events/${id}/attendees``` - add or update attendee for event with id [NOT IMPLEMENTED]
 
@@ -70,4 +68,40 @@ saved entities
   'tags': ['bg'],
   'active': True
 }
+```
+
+## Request examples
+
+> app run on localhost:6910, version api **v0.1**
+
+#### show actual events
+```
+curl -i http://localhost:6910/api/v0.1/events
+```
+
+```
+HTTP/1.0 200 OK
+Content-Type: application/json
+Connection: close
+Server: Werkzeug/0.12 Python/3.5.2
+Date: Sat, 11 Mar 2017 20:35:30 GMT
+
+...
+```
+
+#### insert/update
+
+```
+curl -i -H "Content-Type: application/json" -X PUT -d '{"price": "5 BYN", "tags": ["bg"], "description": "short info", "title": "Quiz", "date": "06.03",  "location": "pub"}' http://localhost:6910/api/v0.1/events
+
+```
+
+```
+HTTP/1.0 201 CREATED
+Content-Type: application/json
+Content-Length: 27
+Server: Werkzeug/0.12 Python/3.5.2
+Date: Sat, 11 Mar 2017 22:15:32 GMT
+
+"58c47702fd8c2c7dcba0a272"
 ```

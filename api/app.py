@@ -1,11 +1,9 @@
 #!flenv/bin/python
 # -*- coding: utf-8 -*-
-from flask import Flask, jsonify, g
+from flask import Flask, jsonify, g, request, abort
 from pymongo import MongoClient
 from dataservice import DataService
-import json
 from bson import ObjectId
-# from bson.json_util import dumps
 import os
 import datetime
 from flask.json import JSONEncoder
@@ -45,6 +43,16 @@ def get_events():
     events = [event for event in cursor]
     return  jsonify(events)
 
+@app.route('/api/v0.1/events', methods=['PUT'])
+def put_event():
+
+    if not request.json:
+        abort(400)
+
+    service = DataService(get_db())
+    result = service.upsert_event(request.json)
+    return jsonify(result), 201
+
 
 def get_db():
     """Opens a new database connection if there is none yet for the
@@ -65,7 +73,6 @@ def close_db(error):
     """Closes the database again at the end of the request."""
     if hasattr(g, 'mongo_client'):
         g.mongo_client.close()
-
 
 if __name__ == '__main__':
 
