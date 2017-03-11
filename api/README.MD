@@ -120,3 +120,19 @@ Date: Sat, 11 Mar 2017 22:15:32 GMT
 
 "58c47702fd8c2c7dcba0a272"
 ```
+
+#### delete event
+
+```
+curl -i -X DELETE  http://localhost:6910/api/v0.1/events/58c48149fd8c2c05677e222d
+```
+
+```
+HTTP/1.0 201 CREATED
+Content-Type: application/json
+Content-Length: 27
+Server: Werkzeug/0.12 Python/3.5.2
+Date: Sat, 11 Mar 2017 23:24:47 GMT
+
+"58c48149fd8c2c05677e222d"
+```

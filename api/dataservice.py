@@ -70,8 +70,9 @@ class DataService:
 
         return result
 
-    def disable_event(self):
-        pass
+    def disable_event(self, event_id):
+        self.db.events.update_one({'_id': ObjectId(event_id)}, {'$set': {'active': False}})
+
 
     def upsert_attendee(self):
         pass

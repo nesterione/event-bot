@@ -59,6 +59,11 @@ def get_event(event_id):
     event = service.get_event(event_id)
     return jsonify(event)
 
+@app.route('/api/v0.1/events/<string:event_id>', methods=['DELETE'])
+def delete_event(event_id):
+    service = DataService(get_db())
+    service.disable_event(event_id)
+    return jsonify(event_id), 201
 
 def get_db():
     """Opens a new database connection if there is none yet for the
