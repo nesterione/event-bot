@@ -33,7 +33,7 @@ app.json_encoder = CustomJSONEncoder
 
 @app.route('/')
 def index():
-    return "Hi, this is Events API <br> /api/v0.1/events - return all events"
+    return "Hi, this is Events API <br> read more <a href='https://github.com/nesterione/event-bot/blob/dev/api'>https://github.com/nesterione/event-bot/blob/dev/api</a>"
 
 
 @app.route('/api/v0.1/events', methods=['GET'])
@@ -82,7 +82,7 @@ def put_attendee(event_id):
 def delete_attendee(event_id, attendee_id):
     service = DataService(get_db())
     service.remove_attendee(event_id, attendee_id)
-    return jsonify({'status':'OK'}), 201
+    return jsonify({'status': 'OK'}), 201
 
 
 def get_db():
@@ -104,6 +104,7 @@ def close_db(error):
     """Closes the database again at the end of the request."""
     if hasattr(g, 'mongo_client'):
         g.mongo_client.close()
+
 
 if __name__ == '__main__':
 
