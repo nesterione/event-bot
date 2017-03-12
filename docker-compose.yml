@@ -7,13 +7,28 @@ services:
         container_name: events-api
         hostname: events-api
         restart: always
-
         ports: 
             - "6910:6910"
         environment:
             - DB_URI=<enter your db uri here>
             - DB_NAME=<enter your database name here>
-
+            - TOKE=<enter your token>
         logging: 
             driver: json-file
-         
+    events-client:
+        build: nesterione/web-client
+        image: nesterione/events-api
+        container_name: events-client
+        hostname: events-client
+        restart: always
+        ports:
+            - "9231:9231"
+        environment:
+            - BASE_URL=http://localhost:6910
+            - EVENTS_USER=admin # enter your username
+            - EVENTS_PASS=admin # enter your password
+            - API_TOKEN=<enter your token>
+        logging: 
+            driver: json-file
+        depends_on:
+            - events-api
