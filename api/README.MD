@@ -136,3 +136,19 @@ Date: Sat, 11 Mar 2017 23:24:47 GMT
 
 "58c48149fd8c2c05677e222d"
 ```
+
+#### add attendee
+
+```
+curl -i -H "Content-Type: application/json" -X PUT -d '{"name":"User Userov", "notes":"note"}' http://localhost:6910/api/v0.1/events/58c48d6afd8c2c0e75da9d51/attendees
+```
+
+```
+HTTP/1.0 201 CREATED
+Content-Type: application/json
+Content-Length: 5
+Server: Werkzeug/0.12 Python/3.5.2
+Date: Sun, 12 Mar 2017 00:06:13 GMT
+
+null
+```

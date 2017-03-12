@@ -8,8 +8,8 @@ import os
 import datetime
 from flask.json import JSONEncoder
 
-class CustomJSONEncoder(JSONEncoder):
 
+class CustomJSONEncoder(JSONEncoder):
     def default(self, obj):
         try:
             if isinstance(obj, ObjectId):
@@ -24,12 +24,12 @@ class CustomJSONEncoder(JSONEncoder):
         return JSONEncoder.default(self, obj)
 
 
-
 # TODO refactor architecture
 
 app = Flask(__name__)
 app.config['JSON_AS_ASCII'] = False
 app.json_encoder = CustomJSONEncoder
+
 
 @app.route('/')
 def index():
@@ -41,11 +41,11 @@ def get_events():
     service = DataService(get_db())
     cursor = service.get_actual_events()
     events = [event for event in cursor]
-    return  jsonify(events)
+    return jsonify(events)
+
 
 @app.route('/api/v0.1/events', methods=['PUT'])
 def put_event():
-
     if not request.json:
         abort(400)
 
@@ -53,17 +53,30 @@ def put_event():
     result = service.upsert_event(request.json)
     return jsonify(result), 201
 
+
 @app.route('/api/v0.1/events/<string:event_id>', methods=['GET'])
 def get_event(event_id):
     service = DataService(get_db())
     event = service.get_event(event_id)
     return jsonify(event)
 
+
 @app.route('/api/v0.1/events/<string:event_id>', methods=['DELETE'])
 def delete_event(event_id):
     service = DataService(get_db())
     service.disable_event(event_id)
     return jsonify(event_id), 201
+
+
+@app.route('/api/v0.1/events/<string:event_id>/attendees', methods=['PUT'])
+def put_attendee(event_id):
+    if not request.json:
+        abort(400)
+
+    service = DataService(get_db())
+    result = service.upsert_attendee(event_id, request.json)
+    return jsonify(result), 201
+
 
 def get_db():
     """Opens a new database connection if there is none yet for the
@@ -84,6 +97,7 @@ def close_db(error):
     """Closes the database again at the end of the request."""
     if hasattr(g, 'mongo_client'):
         g.mongo_client.close()
+
 
 if __name__ == '__main__':
 

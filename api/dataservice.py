@@ -16,7 +16,6 @@ class DataService:
 
     def upsert_event(self, json):
 
-
         if '_id' in json:
             event = self.db.events.find_one({'_id': ObjectId(json['_id'])})
         else:
@@ -73,9 +72,42 @@ class DataService:
     def disable_event(self, event_id):
         self.db.events.update_one({'_id': ObjectId(event_id)}, {'$set': {'active': False}})
 
+    def upsert_attendee(self, event_id, attendee_raw):
 
-    def upsert_attendee(self):
-        pass
+        attendee = {'name': '', 'notes': ''}
+        if 'id' in attendee_raw:
+            attendee['id'] = attendee_raw['id']
+        if 'name' in attendee_raw:
+            attendee['name'] = attendee_raw['name']
+        if 'notes' in attendee_raw:
+            attendee['notes'] = attendee_raw['notes']
+
+        event = self.db.events.find_one({'_id': ObjectId(event_id)})
+
+        print(1, event)
+
+        if 'id' in attendee:
+            is_found = False
+            for i in range(len(event['attendees'])):
+                if event['attendees'][i]['id'] == attendee['id']:
+                    event['attendees'][i] = attendee
+                    is_found = True
+            if not is_found:
+                event['attendees'].append(attendee)
+        else:
+            max_id = 0
+            for i in range(len(event['attendees'])):
+                if event['attendees'][i]['id'] > max_id:
+                    max_id = event['attendees'][i]['id']
+
+            max_id += 1
+            attendee['id'] = max_id
+            print("ff", attendee)
+            event['attendees'].append(attendee)
+
+        print(2, event)
+        upserted_id = self.db.events.replace_one({'_id': event['_id']}, event, upsert=True).upserted_id
+        return upserted_id
 
     def remove_attendee(self):
         pass
