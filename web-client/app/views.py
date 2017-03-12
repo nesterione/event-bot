@@ -21,17 +21,20 @@ def index():
 def new_event():
     return render_template("edit_event.html", title='New Event')
 
+
 @app.route('/event/new', methods=['POST'])
 def save_new_event():
+    r = process_event(request)
+    return redirect(url_for('index'))
 
-    host = app.config['BASE_URL']
 
-    title = request.form.get('title')
-    description = request.form.get('description')
-    location = request.form.get('location')
-    date = request.form.get('date')
-    price = request.form.get('price')
-    tags = list(set([tag.strip() for tag in request.form.get('tags').split(' ')]))
+def process_event(req, id=None):
+    title = req.form.get('title')
+    description = req.form.get('description')
+    location = req.form.get('location')
+    date = req.form.get('date')
+    price = req.form.get('price')
+    tags = list(set([tag.strip() for tag in req.form.get('tags').split(' ')]))
 
     data = {'title': title,
             'description': description,
@@ -40,12 +43,15 @@ def save_new_event():
             'price': price,
             'tags': tags}
 
+    if id != None:
+        data['_id'] = id
+
+    host = app.config['BASE_URL']
     url = host + '/api/v0.1/events'
     headers = {'Content-Type': 'application/json'}
     r = requests.put(url, data=json.dumps(data), headers=headers)
-    print(json.dumps(data))
-    print(r)
-    return redirect(url_for('index'))
+    return r
+
 
 @app.route('/event/<string:event_id>/edit', methods=['GET'])
 def open_edit_event(event_id):
@@ -59,16 +65,18 @@ def open_edit_event(event_id):
                            event=event)
 
 
-
 @app.route('/event/<string:event_id>/edit', methods=['POST'])
-def save_edit_event():
-    pass
+def save_edit_event(event_id):
+    r = process_event(request,event_id)
+    return redirect(url_for('get_event', event_id=event_id))
+
 
 @app.route('/event/<string:event_id>/delete', methods=['POST'])
 def delete_event(event_id):
     host = app.config['BASE_URL']
     requests.delete(url=host + '/api/v0.1/events/' + event_id)
     return "", 200
+
 
 @app.route('/event/<string:event_id>', methods=['GET'])
 def get_event(event_id):
