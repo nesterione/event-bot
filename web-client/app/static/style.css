@@ -59,6 +59,19 @@ body {
   margin-top: 28px;
 }
 
+.attendee:nth-child(even) {
+  background-color: #EBEBEC;
+  padding:5px 0;
+  margin: 5px 0;
+  border-radius:5px;
+}
+.attendee:nth-child(odd) {
+  background-color: #FFF;
+  padding:5px 0;
+  margin: 5px 0;
+  border-radius:5px;
+}
+
 /* Responsive: Portrait tablets and up */
 @media screen and (min-width: 768px) {
   /* Remove the padding we set earlier */

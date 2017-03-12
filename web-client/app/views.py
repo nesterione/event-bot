@@ -21,7 +21,6 @@ def index():
 def new_event():
     return render_template("edit_event.html", title='New Event')
 
-
 @app.route('/event/new', methods=['POST'])
 def save_new_event():
 
@@ -48,6 +47,28 @@ def save_new_event():
     print(r)
     return redirect(url_for('index'))
 
+@app.route('/event/<string:event_id>/edit', methods=['GET'])
+def open_edit_event(event_id):
+    host = app.config['BASE_URL']
+
+    r = requests.get(url=host + '/api/v0.1/events/' + event_id)
+    event = r.json()
+    event['tags'] = " ".join(event['tags'])
+    return render_template("edit_event.html",
+                           title='Edit Event',
+                           event=event)
+
+
+
+@app.route('/event/<string:event_id>/edit', methods=['POST'])
+def save_edit_event():
+    pass
+
+@app.route('/event/<string:event_id>/delete', methods=['POST'])
+def delete_event(event_id):
+    host = app.config['BASE_URL']
+    requests.delete(url=host + '/api/v0.1/events/' + event_id)
+    return "", 200
 
 @app.route('/event/<string:event_id>', methods=['GET'])
 def get_event(event_id):
