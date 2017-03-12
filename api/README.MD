@@ -152,3 +152,21 @@ Date: Sun, 12 Mar 2017 00:06:13 GMT
 
 null
 ```
+
+#### delete attendee
+
+```
+curl -i -X DELETE http://localhost:6910/api/v0.1/events/58c48eb2fd8c2c0f3ffe93d8/attendees/1
+```
+
+```
+HTTP/1.0 201 CREATED
+Content-Type: application/json
+Content-Length: 21
+Server: Werkzeug/0.12 Python/3.5.2
+Date: Sun, 12 Mar 2017 00:23:29 GMT
+
+{
+  "status": "OK"
+}
+```

@@ -78,6 +78,13 @@ def put_attendee(event_id):
     return jsonify(result), 201
 
 
+@app.route('/api/v0.1/events/<string:event_id>/attendees/<int:attendee_id>', methods=['DELETE'])
+def delete_attendee(event_id, attendee_id):
+    service = DataService(get_db())
+    service.remove_attendee(event_id, attendee_id)
+    return jsonify({'status':'OK'}), 201
+
+
 def get_db():
     """Opens a new database connection if there is none yet for the
     current application context.
@@ -97,7 +104,6 @@ def close_db(error):
     """Closes the database again at the end of the request."""
     if hasattr(g, 'mongo_client'):
         g.mongo_client.close()
-
 
 if __name__ == '__main__':
 

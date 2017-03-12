@@ -109,5 +109,5 @@ class DataService:
         upserted_id = self.db.events.replace_one({'_id': event['_id']}, event, upsert=True).upserted_id
         return upserted_id
 
-    def remove_attendee(self):
-        pass
+    def remove_attendee(self, event_id, attendee_id):
+        self.db.events.update_one({'_id': ObjectId(event_id)}, {'$pull': {'attendees': {'id': {'$eq':attendee_id}}}})
