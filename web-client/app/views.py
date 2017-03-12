@@ -1,8 +1,35 @@
 # coding: utf-8
-from flask import render_template, redirect, url_for, request
+from flask import render_template, redirect, url_for, request, Response
 from app import app
 import requests
+from functools import wraps
 import json
+
+
+def check_auth(username, password):
+    """This function is called to check if a username /
+    password combination is valid.
+    """
+    return username == app.config['EVENTS_USER'] and password == app.config['EVENTS_PASS']
+
+
+def authenticate():
+    """Sends a 401 response that enables basic auth"""
+    return Response(
+        'Could not verify your access level for that URL.\n'
+        'You have to login with proper credentials', 401,
+        {'WWW-Authenticate': 'Basic realm="Login Required"'})
+
+
+def requires_auth(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        auth = request.authorization
+        if not auth or not check_auth(auth.username, auth.password):
+            return authenticate()
+        return f(*args, **kwargs)
+
+    return decorated
 
 
 @app.route('/', methods=['GET'])
@@ -18,11 +45,13 @@ def index():
 
 
 @app.route('/event/new', methods=['GET'])
+@requires_auth
 def new_event():
     return render_template("edit_event.html", title='New Event')
 
 
 @app.route('/event/new', methods=['POST'])
+@requires_auth
 def save_new_event():
     r = process_event(request)
     return redirect(url_for('index'))
@@ -54,6 +83,7 @@ def process_event(req, id=None):
 
 
 @app.route('/event/<string:event_id>/edit', methods=['GET'])
+@requires_auth
 def open_edit_event(event_id):
     host = app.config['BASE_URL']
 
@@ -66,12 +96,14 @@ def open_edit_event(event_id):
 
 
 @app.route('/event/<string:event_id>/edit', methods=['POST'])
+@requires_auth
 def save_edit_event(event_id):
-    r = process_event(request,event_id)
+    r = process_event(request, event_id)
     return redirect(url_for('get_event', event_id=event_id))
 
 
 @app.route('/event/<string:event_id>/delete', methods=['POST'])
+@requires_auth
 def delete_event(event_id):
     host = app.config['BASE_URL']
     requests.delete(url=host + '/api/v0.1/events/' + event_id)
@@ -79,6 +111,7 @@ def delete_event(event_id):
 
 
 @app.route('/event/<string:event_id>', methods=['GET'])
+@requires_auth
 def get_event(event_id):
     host = app.config['BASE_URL']
 
@@ -93,6 +126,7 @@ def get_event(event_id):
 
 
 @app.route('/event/<string:event_id>/attendees', methods=['POST'])
+@requires_auth
 def add_attendee(event_id):
     host = app.config['BASE_URL']
 
