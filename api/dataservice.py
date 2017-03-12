@@ -59,7 +59,8 @@ class DataService:
 
         if 'tags' in json:
             unique = set(event['tags'])
-            unique.add(*json['tags'])
+            for tag in json['tags']:
+                unique.add(tag)
             event['tags'] = list(unique)
 
         if '_id' not in event:

@@ -17,6 +17,38 @@ def index():
                            events=r.json())
 
 
+@app.route('/event/new', methods=['GET'])
+def new_event():
+    return render_template("edit_event.html", title='New Event')
+
+
+@app.route('/event/new', methods=['POST'])
+def save_new_event():
+
+    host = app.config['BASE_URL']
+
+    title = request.form.get('title')
+    description = request.form.get('description')
+    location = request.form.get('location')
+    date = request.form.get('date')
+    price = request.form.get('price')
+    tags = list(set([tag.strip() for tag in request.form.get('tags').split(' ')]))
+
+    data = {'title': title,
+            'description': description,
+            'location': location,
+            'date': date,
+            'price': price,
+            'tags': tags}
+
+    url = host + '/api/v0.1/events'
+    headers = {'Content-Type': 'application/json'}
+    r = requests.put(url, data=json.dumps(data), headers=headers)
+    print(json.dumps(data))
+    print(r)
+    return redirect(url_for('index'))
+
+
 @app.route('/event/<string:event_id>', methods=['GET'])
 def get_event(event_id):
     host = app.config['BASE_URL']
@@ -42,5 +74,5 @@ def add_attendee(event_id):
     url = host + '/api/v0.1/events/' + event_id + '/attendees'
     headers = {'Content-Type': 'application/json'}
     r = requests.put(url, data=json.dumps(data), headers=headers)
-    print(r)
+    # print(r)
     return redirect(url_for('get_event', event_id=event_id))
