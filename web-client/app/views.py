@@ -6,6 +6,12 @@ from functools import wraps
 import json
 
 
+def get_headers():
+    api_token = app.config['API_TOKEN']
+    headers = {'Content-Type': 'application/json', 'Token': api_token}
+    return headers
+
+
 def check_auth(username, password):
     """This function is called to check if a username /
     password combination is valid.
@@ -37,7 +43,7 @@ def requires_auth(f):
 def index():
     host = app.config['BASE_URL']
 
-    r = requests.get(url=host + '/api/v0.1/events')
+    r = requests.get(url=host + '/api/v0.1/events',headers=get_headers())
 
     return render_template("index.html",
                            title='Home',
@@ -77,8 +83,7 @@ def process_event(req, id=None):
 
     host = app.config['BASE_URL']
     url = host + '/api/v0.1/events'
-    headers = {'Content-Type': 'application/json'}
-    r = requests.put(url, data=json.dumps(data), headers=headers)
+    r = requests.put(url, data=json.dumps(data), headers=get_headers())
     return r
 
 
@@ -87,7 +92,7 @@ def process_event(req, id=None):
 def open_edit_event(event_id):
     host = app.config['BASE_URL']
 
-    r = requests.get(url=host + '/api/v0.1/events/' + event_id)
+    r = requests.get(url=host + '/api/v0.1/events/' + event_id, headers=get_headers())
     event = r.json()
     event['tags'] = " ".join(event['tags'])
     return render_template("edit_event.html",
@@ -106,7 +111,7 @@ def save_edit_event(event_id):
 @requires_auth
 def delete_event(event_id):
     host = app.config['BASE_URL']
-    requests.delete(url=host + '/api/v0.1/events/' + event_id)
+    requests.delete(url=host + '/api/v0.1/events/' + event_id,headers=get_headers())
     return "", 200
 
 
@@ -115,7 +120,7 @@ def delete_event(event_id):
 def get_event(event_id):
     host = app.config['BASE_URL']
 
-    r = requests.get(url=host + '/api/v0.1/events/' + event_id)
+    r = requests.get(url=host + '/api/v0.1/events/' + event_id,headers=get_headers())
     event = r.json()
 
     event['count'] = len(event['attendees'])
@@ -123,6 +128,14 @@ def get_event(event_id):
     return render_template("event.html",
                            title='Event',
                            event=event)
+
+
+@app.route('/event/<string:event_id>/attendee/<int:attendee_id>/delete', methods=['POST'])
+@requires_auth
+def delete_attendee(event_id, attendee_id):
+    host = app.config['BASE_URL']
+    requests.delete(url=host + '/api/v0.1/events/' + event_id + '/attendees/' + str(attendee_id), headers=get_headers())
+    return "", 200
 
 
 @app.route('/event/<string:event_id>/attendees', methods=['POST'])
@@ -135,7 +148,6 @@ def add_attendee(event_id):
     # headers = {'Authorization': 'Bearer ' + token, "Content-Type": "application/json", 'data': data}
     data = {'name': name, "notes": notes}
     url = host + '/api/v0.1/events/' + event_id + '/attendees'
-    headers = {'Content-Type': 'application/json'}
-    r = requests.put(url, data=json.dumps(data), headers=headers)
+    r = requests.put(url, data=json.dumps(data), headers=get_headers())
     # print(r)
     return redirect(url_for('get_event', event_id=event_id))
