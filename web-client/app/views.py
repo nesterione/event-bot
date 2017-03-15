@@ -116,7 +116,6 @@ def delete_event(event_id):
 
 
 @app.route('/event/<string:event_id>', methods=['GET'])
-@requires_auth
 def get_event(event_id):
     host = app.config['BASE_URL']
 
