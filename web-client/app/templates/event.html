@@ -14,7 +14,7 @@
             <a href="javascript:closeEvent('{{event._id}}');"><span class="glyphicon glyphicon-trash"
                                                      aria-hidden="true"></span>Close</a>
         </div>
-        <p>{{event.description}}</p>
+        <p>{{event.description |safe}}</p>
         <p><b>Where: </b> {{event.location}}</p>
         <p><b>When: </b> {{event.date}}</p>
         <p><b>Price: </b> {{event.price}}</p>

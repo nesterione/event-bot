@@ -4,6 +4,7 @@ from app import app
 import requests
 from functools import wraps
 import json
+import markdown2
 
 
 def get_headers():
@@ -45,9 +46,13 @@ def index():
 
     r = requests.get(url=host + '/api/v0.1/events',headers=get_headers())
 
+    events = r.json()
+    for event in events:
+        event['description'] = markdown2.markdown(event['description'])
+
     return render_template("index.html",
                            title='Home',
-                           events=r.json())
+                           events=events)
 
 
 @app.route('/event/new', methods=['GET'])
@@ -123,9 +128,12 @@ def get_event(event_id):
     event = r.json()
 
     event['count'] = len(event['attendees'])
+    event['description'] = markdown2.markdown(event['description'])
 
+    description = event['description'][:200] + '...'
     return render_template("event.html",
                            title='Event',
+                           description=description,
                            event=event)
 
 

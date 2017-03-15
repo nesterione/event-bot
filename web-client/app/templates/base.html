@@ -1,16 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Forget">
+
+    {% if description %}
+    <meta name="description"
+          content="{{description}}">
+    {% else %}
+    <meta name="description"
+          content="Разлычные события, интеллектуальные игры, спортивные мероприятия. Удобный сбособ собраться вместе.">
+    {% endif %}
+
     <meta name="author" content="nesterione">
-    
+
     {% if title %}
     <title>{{title}} - Events</title>
     {% else %}
-    <title>microblog</title>
+    <title>Events platform</title>
     {% endif %}
 
     <link rel="stylesheet" type="text/css" href="/static/bootstrap/css/bootstrap.css">
@@ -18,22 +26,22 @@
     <link rel="stylesheet" type="text/css" href="/static/style.css">
 
     <script src="/static/jquery/jquery.js"></script>
-  </head>
-  <body>
+</head>
+<body>
 
-    <div class="container">
-      <div class="header clearfix">
+<div class="container">
+    <div class="header clearfix">
         <h3 class="text-muted"><a href="/">Events platform</a></h3>
-      </div>
+    </div>
 
-		{% block content %}{% endblock %}
+    {% block content %}{% endblock %}
 
-      <footer class="footer">
+    <footer class="footer">
         <p>&copy;right have</p>
-      </footer>
+    </footer>
 
-    </div> <!-- /container -->
-  </body>
+</div> <!-- /container -->
+</body>
 <!-- Yandex.Metrika counter -->
 <script type="text/javascript">
     (function (d, w, c) {
@@ -59,8 +67,11 @@
             d.addEventListener("DOMContentLoaded", f, false);
         } else { f(); }
     })(document, window, "yandex_metrika_callbacks");
+
 </script>
-<noscript><div><img src="https://mc.yandex.ru/watch/43489784" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<noscript>
+    <div><img src="https://mc.yandex.ru/watch/43489784" style="position:absolute; left:-9999px;" alt=""/></div>
+</noscript>
 <!-- /Yandex.Metrika counter -->
 </html>
 
